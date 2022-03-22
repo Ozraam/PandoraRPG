@@ -18,5 +18,4 @@ export class Fighter {
 
         this.user = user;
     }
-
 }

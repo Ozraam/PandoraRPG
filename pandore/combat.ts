@@ -1,16 +1,16 @@
-import { Client, Emoji, Message, User } from "discord.js"
-import { Avatar } from "./user/avatar"
+import { Client, Emoji, Message, User } from "discord.js";
+//import { Avatar } from "./user/avatar";
 import { Fighter } from "./user/fighter";
-import { Pandora } from "./user/pandora"
-import { removeReaction } from './utilities'
-
+import { Pandora } from "./user/pandora";
+import { randomP, removeReaction } from './utilities';
+import { Monster } from "./monster/monster"
 
 export class Combat {
 
     origin: Message;
     board: Message;
     fighter: Fighter;
-    champion: Fighter;
+    champion: Monster;
     turn: number = 0;
 
     state: number = 0
@@ -168,6 +168,20 @@ export class Combat {
 
     // do figth sequence
     fight(action: Emoji) {
+
+        /*La regen n'est pas suffisante oour compenser tout les dégâts d'une attaque, donc attaque bat regen
+
+La parade renvoie les dégâts d'une attaque, donc parade bat attaque
+
+Et la regen permet de récupérer de la vie gratuitement si l'adversaire n'attaque pas, donc si il fait une parade, tu t'es regen gratos, donc regen bat parade */
+
+        const actionMonster = randomP([])
+        // Attaque Phase
+
+        // Parade Phase
+
+        // Heal Phase
+
         return false
     }
 

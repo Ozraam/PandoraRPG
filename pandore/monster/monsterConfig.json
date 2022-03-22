@@ -1,0 +1,12 @@
+[
+    {
+        "name": "stephane",
+        "stats": {
+            "health": 100,
+            "dommage": 14,
+            "protection": 10,
+            "lvl": 3,
+            "upRate": 1.08
+        }
+    }
+]
