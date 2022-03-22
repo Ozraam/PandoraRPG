@@ -2,7 +2,7 @@
     "stats": {
         "health": 100,
         "dommage": 14,
-        "protection": 10,
+        "protection": 0.5,
         "lvl": 3,
         "heal": 7,
         "upRate": 1.08

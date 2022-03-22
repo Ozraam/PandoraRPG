@@ -1,14 +1,33 @@
 {
     "choice": [
         {
-            "name": "stephane",
+            "name": "Stephane",
+            "image": "https://i.imgur.com/2UEDjPz.jpeg",
             "stats": {
                 "health": 100,
                 "dommage": 14,
-                "protection": 10,
+                "protection": 0.5,
                 "lvl": 3,
                 "upRate": 1.08,
                 "heal": 7
+            },
+            "spawnRate": 20,
+            "actionChance": [
+                [0, 1], 
+                [1, 5],
+                [2, 3]
+            ]
+        }, 
+        {
+            "name": "Ultra Beast Stephane",
+            "image": "https://i.imgur.com/2UEDjPz.jpeg",
+            "stats": {
+                "health": 500,
+                "dommage": 30,
+                "protection": 2,
+                "lvl": 0,
+                "upRate": 1.08,
+                "heal": 15
             },
             "spawnRate": 1,
             "actionChance": [
@@ -16,7 +35,7 @@
                 [1, 5],
                 [2, 3]
             ]
-        }
+        } 
     ],
-    "total": 1
+    "total": 21
 }

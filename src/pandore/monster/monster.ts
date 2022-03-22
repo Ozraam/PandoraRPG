@@ -1,5 +1,6 @@
 interface MConfig {
     name: string,
+    image: string,
     stats: {
         health: number,
         dommage: number,

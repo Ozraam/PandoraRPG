@@ -57,17 +57,17 @@ export class Combat {
                 name: "Ozraam",
                 icon_url: "https://styles.redditmedia.com/t5_w4hl3/styles/profileIcon_k1wvp2mtezk81.png"
             },*/
-            thumbnail: { url:"https://i.imgur.com/2UEDjPz.jpeg" },
+            thumbnail: { url:this.champion.config.image },
             fields: [
                 {
                     name:"Préparation au combat !",
                     value:`${this.fighter.user.user.username} va se battre contre ${this.champion.config.name}\n`
                 },{
                     name:`Stats de ${this.champion.config.name} :`,
-                    value:`Vie: ${this.champion.health.toFixed(2)} ${Combat.heart}\nAttaque: ${this.champion.dommage.toFixed(2)} ${Combat.sword}\nProtection: ${this.champion.protection.toFixed(0)} ${Combat.shield}`
+                    value:`Vie: ${this.champion.health.toFixed(2)} ${Combat.heart}\nAttaque: ${this.champion.dommage.toFixed(2)} ${Combat.sword}\nParade: ${this.champion.protection.toFixed(0)} ${Combat.shield}`
                 },{
                     name:`Stats de ${this.fighter.user.user.username}:`,
-                    value:`Vie: ${this.fighter.health.toFixed(2)} ${Combat.heart}\nAttaque: ${this.fighter.dommage.toFixed(2)} ${Combat.sword}\nProtection: ${this.fighter.protection.toFixed(2)} ${Combat.shield}`
+                    value:`Vie: ${this.fighter.health.toFixed(2)} ${Combat.heart}\nAttaque: ${this.fighter.dommage.toFixed(2)} ${Combat.sword}\nParade: ${this.fighter.protection.toFixed(2)} ${Combat.shield}`
                 }
             ],
             footer: {
@@ -151,7 +151,7 @@ export class Combat {
                 name: "Ozraam",
                 icon_url: "https://styles.redditmedia.com/t5_w4hl3/styles/profileIcon_k1wvp2mtezk81.png"
             },*/
-            thumbnail: { url:"https://i.imgur.com/2UEDjPz.jpeg" },
+            thumbnail: { url: this.champion.config.image },
             fields: [
                 {
                     name: `Action de ${this.champion.config.name} ${this.champion.health.toFixed(2)}${Combat.heart}`,
@@ -195,10 +195,10 @@ export class Combat {
 
         // Parade Phase
         if(actionUser == 2) {
-            actionPhase[2][0] = actionPhase[1][1] / 2
+            actionPhase[2][0] = actionPhase[1][1] * this.fighter.protection
         }
         if (actionMonster == 2) {
-            actionPhase[2][1] = actionPhase[1][0] / 2
+            actionPhase[2][1] = actionPhase[1][0] * this.champion.protection
         }
 
         // Heal Phase
@@ -261,7 +261,7 @@ export class Combat {
                 name: "Ozraam",
                 icon_url: "https://styles.redditmedia.com/t5_w4hl3/styles/profileIcon_k1wvp2mtezk81.png"
             },*/
-            thumbnail: { url:"https://i.imgur.com/2UEDjPz.jpeg" },
+            thumbnail: { url:this.champion.config.image },
             fields: [
                 field
             ]
