@@ -3,6 +3,8 @@
         "health": 100,
         "dommage": 14,
         "protection": 10,
-        "lvl": 3
+        "lvl": 3,
+        "heal": 7,
+        "upRate": 1.08
     }
 }

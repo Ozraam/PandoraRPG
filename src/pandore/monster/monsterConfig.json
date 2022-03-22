@@ -1,0 +1,22 @@
+{
+    "choice": [
+        {
+            "name": "stephane",
+            "stats": {
+                "health": 100,
+                "dommage": 14,
+                "protection": 10,
+                "lvl": 3,
+                "upRate": 1.08,
+                "heal": 7
+            },
+            "spawnRate": 1,
+            "actionChance": [
+                [0,10], 
+                [1, 70],
+                [2, 20]
+            ]
+        }
+    ],
+    "total": 1
+}

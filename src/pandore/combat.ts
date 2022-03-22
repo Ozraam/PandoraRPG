@@ -2,8 +2,9 @@ import { Client, Emoji, Message, User } from "discord.js";
 //import { Avatar } from "./user/avatar";
 import { Fighter } from "./user/fighter";
 import { Pandora } from "./user/pandora";
-import { randomP, removeReaction } from './utilities';
+import { randomP, removeReaction, choiceStat } from './utilities';
 import { Monster } from "./monster/monster"
+import * as monsterConfig from "./monster/monsterConfig.json"
 
 export class Combat {
 
@@ -35,8 +36,9 @@ export class Combat {
 
         // init all the fighter
         this.fighter = new Fighter(world.get(user));
-        this.champion = undefined;
-       
+        
+        this.champion = new Monster(choiceStat(monsterConfig))
+        
         this.board = board;
 
         this.createBoard();
@@ -55,9 +57,9 @@ export class Combat {
             fields: [
                 {
                     name:"Préparation au combat !",
-                    value:`${this.fighter.user.user.username} va se battre contre Stéphane\n`
+                    value:`${this.fighter.user.user.username} va se battre contre ${this.champion.config.name}\n`
                 },{
-                    name:"Stats de Stéphane :",
+                    name:`Stats de ${this.champion.config.name} :`,
                     value:`Vie: ${this.champion.health.toFixed(2)} ${Combat.heart}\nAttaque: ${this.champion.dommage.toFixed(2)} ${Combat.sword}\nProtection: ${this.champion.protection.toFixed(0)} ${Combat.shield}`
                 },{
                     name:`Stats de ${this.fighter.user.user.username}:`,
@@ -148,8 +150,8 @@ export class Combat {
             thumbnail: { url:"https://i.imgur.com/2UEDjPz.jpeg" },
             fields: [
                 {
-                    name: `Action de ${this.client.user.username} ${this.champion.health.toFixed(2)}${Combat.heart}`,
-                    value: fightText("Stéphane", this.champion.lastAction)
+                    name: `Action de ${this.champion.config.name} ${this.champion.health.toFixed(2)}${Combat.heart}`,
+                    value: fightText(this.champion.config.name, this.champion.lastAction)
                 },
                 {
                     name: `Action de ${this.fighter.user.user.username} ${this.fighter.health.toFixed(2)}${Combat.heart}`,
@@ -169,18 +171,49 @@ export class Combat {
     // do figth sequence
     fight(action: Emoji) {
 
-        /*La regen n'est pas suffisante oour compenser tout les dégâts d'une attaque, donc attaque bat regen
+        const listAction = [Combat.heart, Combat.sword, Combat.shield];
+        if(!listAction.includes(action.name)) return;
 
-La parade renvoie les dégâts d'une attaque, donc parade bat attaque
+        const actionUser = listAction.indexOf(action.name);
 
-Et la regen permet de récupérer de la vie gratuitement si l'adversaire n'attaque pas, donc si il fait une parade, tu t'es regen gratos, donc regen bat parade */
+        const actionMonster = randomP(this.champion.config.actionChance);
 
-        const actionMonster = randomP([])
+        const actionPhase = [[0,0],[0,0],[0,0]];
         // Attaque Phase
+        if(actionUser == 1) {
+            actionPhase[1][0] = this.fighter.dommage + Math.random() * 2 - 1
+        }
+        if (actionMonster == 1) {
+            actionPhase[1][1] = this.champion.dommage + Math.random() * 2 - 1;
+        }
 
         // Parade Phase
+        if(actionUser == 2) {
+            actionPhase[2][0] = actionPhase[1][1] / 2
+            actionPhase[1][1] = 0
+        }
+        if (actionMonster == 2) {
+            actionPhase[2][1] = actionPhase[1][0] / 2
+            actionPhase[1][0] = 0
+        }
 
         // Heal Phase
+        if(actionUser == 0) {
+            actionPhase[0][0] = this.fighter.heal + Math.random() * 2 - 1;
+        }
+        if (actionMonster == 0) {
+            actionPhase[0][1] = this.champion.config.stats.heal + Math.random() * 2 - 1;
+        }
+
+        // Resolve Phase
+
+        this.fighter.lastAction = [actionUser, actionPhase[actionUser][0]]
+        this.champion.lastAction = [actionMonster, actionPhase[actionMonster][1]]
+
+        this.fighter.health += actionPhase[0][0] - actionMonster[1][1]
+        this.champion.health += actionPhase[0][1] - actionMonster[1][0]
+
+        this.board.edit({embeds:[this.getFigthTurn()]})
 
         return false
     }

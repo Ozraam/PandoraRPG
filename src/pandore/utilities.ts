@@ -25,3 +25,13 @@ export function randomP(choice: number[][]) {
 
     return l[Math.floor(Math.random() * l.length)]
 }
+
+export function choiceStat(ch: any) {
+    const choice = Math.random() * ch.total;
+    let tchoice = 0
+    for(const st of ch.choice) {
+        tchoice += st.spawnRate
+        if(choice < tchoice) return st;
+    }
+    return ch.choice[0];
+}

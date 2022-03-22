@@ -1,5 +1,3 @@
-import config from "./monsterConfig.json"
-
 interface MConfig {
     name: string,
     stats: {
@@ -7,8 +5,11 @@ interface MConfig {
         dommage: number,
         protection: number,
         lvl: number,
-        upRate: number
-    }
+        upRate: number,
+        heal: number
+    },
+    spawnRate: number,
+    actionChance : number[][]
 }
 
 export class Monster {
@@ -19,8 +20,8 @@ export class Monster {
     lastAction: number[] = [-1,0]
     config : MConfig
     
-    constructor() {
-        this.config = config[Math.floor(Math.random() * config.length)]
+    constructor(stats: MConfig) {
+        this.config = stats
         this.health = this.config.stats.health
         this.dommage = this.config.stats.dommage
         this.protection = this.config.stats.protection

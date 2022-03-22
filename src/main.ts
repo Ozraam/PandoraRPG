@@ -1,6 +1,6 @@
 import { PageMessages } from "./page";
 import { Intents, Message, MessageReaction, MessageEmbed, Client, User } from "discord.js"
-import config from "./config.json"
+import * as config from "../config.json"
 
 
 /* imports et perm discord */
