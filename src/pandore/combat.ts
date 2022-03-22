@@ -4,7 +4,11 @@ import { Fighter } from "./user/fighter";
 import { Pandora } from "./user/pandora";
 import { randomP, removeReaction, choiceStat } from './utilities';
 import { Monster } from "./monster/monster"
-import * as monsterConfig from "./monster/monsterConfig.json"
+import { readFileSync } from "fs"
+
+const monsterConfig = JSON.parse(readFileSync("src/pandore/monster/monsterConfig.json").toString())
+
+
 
 export class Combat {
 
@@ -133,7 +137,7 @@ export class Combat {
             if(action[0] == 1) {
                 return `${nom} à infligé ${action[1].toFixed(2)} dégats !`
             } else if(action[0] == 2) {
-                return `${nom} s'est défendu de ${action[1].toFixed(2)} dommage !`
+                return `${nom} à paré une attaque, il renvoi ${action[1].toFixed(2)} dégats sur l'adversaire !`
             } else if(action[0] == 0) {
                 return `${nom} s'est soigné de ${action[1].toFixed(2)} PV !`
             } else {
@@ -171,8 +175,10 @@ export class Combat {
     // do figth sequence
     fight(action: Emoji) {
 
+        this.turn ++;
         const listAction = [Combat.heart, Combat.sword, Combat.shield];
         if(!listAction.includes(action.name)) return;
+        removeReaction(this.board, action.name, this.fighter.user.user.id)
 
         const actionUser = listAction.indexOf(action.name);
 
@@ -190,11 +196,9 @@ export class Combat {
         // Parade Phase
         if(actionUser == 2) {
             actionPhase[2][0] = actionPhase[1][1] / 2
-            actionPhase[1][1] = 0
         }
         if (actionMonster == 2) {
             actionPhase[2][1] = actionPhase[1][0] / 2
-            actionPhase[1][0] = 0
         }
 
         // Heal Phase
@@ -207,15 +211,30 @@ export class Combat {
 
         // Resolve Phase
 
-        this.fighter.lastAction = [actionUser, actionPhase[actionUser][0]]
-        this.champion.lastAction = [actionMonster, actionPhase[actionMonster][1]]
+        this.fighter.lastAction = [actionUser, actionPhase[actionUser][0]];
+        this.champion.lastAction = [actionMonster, actionPhase[actionMonster][1]];
 
-        this.fighter.health += actionPhase[0][0] - actionMonster[1][1]
-        this.champion.health += actionPhase[0][1] - actionMonster[1][0]
+        this.fighter.health += actionPhase[0][0] - (actionPhase[2][0] == 0 ? actionPhase[1][1] : 0) - actionPhase[2][1];
+        this.champion.health += actionPhase[0][1] - (actionPhase[2][1] == 0 ? actionPhase[1][0] : 0) - actionPhase[2][0];
 
-        this.board.edit({embeds:[this.getFigthTurn()]})
 
-        return false
+        // final
+
+        if(this.fighter.health <= 0) {
+            this.state = 4;
+            this.winScreen();
+            return true;
+        } 
+
+        if(this.champion.health <= 0) {
+            this.state = 3;
+            this.winScreen();
+            return true;
+        }
+
+        this.board.edit({embeds:[this.getFigthTurn()]});
+
+        return false;
     }
 
     // show win Screen 
@@ -224,15 +243,15 @@ export class Combat {
         let field = {
             name: `Victoire`,
             value: `Bravo ${this.fighter.user.user.username}! Vous avez tué Stéphane...\nVous avez gagner 10 coin`
-        }
-        this.fighter.user.coin += 10
+        };
+        this.fighter.user.coin += 10;
 
         if(this.state == 4) {
             field = {
                 name: "Défaite",
                 value: "Comment as tu fait pour perde contre Stéphane ?\nLa honte...\nVous avez perdu 3 coin"
-            }
-            this.fighter.user.coin -= 13
+            };
+            this.fighter.user.coin -= 13;
         }
 
         const embed = {
@@ -248,7 +267,7 @@ export class Combat {
             ]
         };
 
-        this.board.edit({embeds:[embed]})
+        this.board.edit({embeds:[embed]});
     }
 }
 

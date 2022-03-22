@@ -1,5 +1,6 @@
 import { User } from "discord.js";
 import { Avatar } from "./avatar"
+import { writeFile } from "fs"
 
 export class Pandora {
     population: Avatar[] = []
@@ -21,6 +22,15 @@ export class Pandora {
 
     add(user: User) {
         this.population.push(new Avatar(user))
+    }
+
+    save() {
+       
+        writeFile("test.txt", JSON.stringify({}), function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
     }
 }
 
