@@ -10,7 +10,10 @@ interface MConfig {
         heal: number
     },
     spawnRate: number,
-    actionChance : number[][]
+    actionChance : number[][],
+    loots: {
+        coin: number
+    }
 }
 
 export class Monster {

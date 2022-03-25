@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, Emoji, DMChannel, PartialDMChannel, NewsChannel, TextChannel, ThreadChannel, User, Client } from "discord.js"
 import { removeReaction } from "./pandore/utilities"
-import { Combat } from "./pandore/combat"
+import { Combat, EMOJI } from "./pandore/combat"
 import { Pandora } from "./pandore/user/pandora";
 
 class Pages {
@@ -80,9 +80,9 @@ export class PageMessages {
         if(this.combats.has(message)) {
             if(this.combats.get(message).do(user, emoji)) {
                 this.combats.delete(message)
-                removeReaction(message, Combat.heart, this.client.user.id)
-                removeReaction(message, Combat.sword, this.client.user.id)
-                removeReaction(message, Combat.shield, this.client.user.id)
+                removeReaction(message, EMOJI.heart, this.client.user.id)
+                removeReaction(message, EMOJI.sword, this.client.user.id)
+                removeReaction(message, EMOJI.shield, this.client.user.id)
             }
             return
         }

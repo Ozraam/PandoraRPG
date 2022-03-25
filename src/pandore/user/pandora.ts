@@ -23,14 +23,5 @@ export class Pandora {
     add(user: User) {
         this.population.push(new Avatar(user))
     }
-
-    save() {
-       
-        writeFile("test.txt", JSON.stringify({}), function(err) {
-            if (err) {
-                console.log(err);
-            }
-        });
-    }
 }
 
