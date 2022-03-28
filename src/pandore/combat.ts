@@ -1,6 +1,6 @@
 import { Client, Emoji, Message, User } from "discord.js";
 import { Fighter } from "./user/fighter";
-import { Pandora } from "./user/pandora";
+import { Pandora } from "./pandora";
 import { randomP, removeReaction, choiceStat } from './utilities';
 import { Monster } from "./monster/monster"
 import { readFileSync } from "fs"
@@ -19,7 +19,6 @@ export const EMOJI = {
 
 export class Combat {
 
-    origin: Message;
     board: Message;
     fighter: Fighter;
     champion: Monster;
@@ -32,15 +31,9 @@ export class Combat {
     client: Client;
 
 
-    constructor(origin: Message, board: Message, user: User, client: Client, world: Pandora) {
-        this.origin = origin;
+    constructor(board: Message, user: User, world: Pandora) {
 
-        this.client = client
-
-        // create new Avatar if the user is not part of it
-        if (!world.has(user)) {
-            world.add(user)
-        }
+        this.client = world.client
 
         // init all the fighter
         this.fighter = new Fighter(world.get(user));

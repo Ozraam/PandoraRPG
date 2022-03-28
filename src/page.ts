@@ -1,7 +1,7 @@
 import { Message, MessageEmbed, Emoji, DMChannel, PartialDMChannel, NewsChannel, TextChannel, ThreadChannel, User, Client } from "discord.js"
 import { removeReaction } from "./pandore/utilities"
 import { Combat, EMOJI } from "./pandore/combat"
-import { Pandora } from "./pandore/user/pandora";
+import { Pandora } from "./pandore/pandora";
 
 class Pages {
     index: number = 0;
@@ -25,7 +25,6 @@ class Pages {
 // Control Pagination
 export class PageMessages {
     messages : Map<Message, Pages> = new Map();
-    combats : Map<Message, Combat> = new Map();
     static left = "\u2B05"
     static right = "\u27A1"
     static sword = "\u2694"
@@ -45,7 +44,7 @@ export class PageMessages {
             })
         }, 100000)
 
-        this.world = new Pandora();
+        this.world = new Pandora(client);
         this.client = client;
     }
 
@@ -75,11 +74,11 @@ export class PageMessages {
     }
 
     async changePages(message: Message, emoji: Emoji, user: User) {
-        if((!this.messages.has(message) && !this.combats.has(message)) || user.bot) return;
+        if((!this.messages.has(message) && !this.world.combats.has(message)) || user.bot) return;
         
-        if(this.combats.has(message)) {
-            if(this.combats.get(message).do(user, emoji)) {
-                this.combats.delete(message)
+        if(this.world.combats.has(message)) {
+            if(this.world.combats.get(message).do(user, emoji)) {
+                this.world.combats.delete(message)
                 removeReaction(message, EMOJI.heart, this.client.user.id)
                 removeReaction(message, EMOJI.sword, this.client.user.id)
                 removeReaction(message, EMOJI.shield, this.client.user.id)
@@ -95,12 +94,11 @@ export class PageMessages {
         else if(emoji.name == PageMessages.sword) {
             if(pages.combat !== undefined) return
 
-            let board = await message.channel.send({embeds: [new MessageEmbed().setTitle(".")]})
-
-            pages.combat = new Combat(message, board, user, this.client, this.world);
-            removeReaction(message, emoji.name, user.id)
             
-            this.combats.set(board, pages.combat)
+            const board = await this.world.newCombat(message.channel, message.author)
+            pages.combat = this.world.combats.get(board);
+            removeReaction(message, emoji.name, user.id)
+        
             return
         }
         else return
